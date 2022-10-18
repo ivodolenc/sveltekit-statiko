@@ -83,7 +83,7 @@ const plugin = pluginOptions => {
           if (isEmpty(options.robots.rules))
             options.robots.rules.push(robotsDefaultsRules)
 
-          if (isEmpty(options.robots.sitemaps))
+          if (options.robots.sitemaps && isEmpty(options.robots.sitemaps))
             options.robots.sitemaps.push(robotsDefaultSitemap)
 
           let robotsContent = generateRobots(options)

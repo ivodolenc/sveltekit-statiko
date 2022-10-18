@@ -1,7 +1,15 @@
 const parseRules = block => {
   let newRules = ''
 
-  for (let rule of Object.keys(block)) newRules += `${rule}: ${block[rule]}\n`
+  for (let rule of Object.keys(block)) {
+    if (!Array.isArray(block[rule])) {
+      newRules += `${rule}: ${block[rule]}\n`
+    } else {
+      for (let value of block[rule]) {
+        newRules += `${rule}: ${value}\n`
+      }
+    }
+  }
 
   return newRules
 }
@@ -13,18 +21,22 @@ const generateRobots = options => {
   for (let block of options.robots.rules)
     rulesContent += `${parseRules(block)}\n`
 
-  const parseSitemaps = () => {
-    let newSitemaps = ''
+  robotsContent += rulesContent
 
-    for (let sitemap of options.robots.sitemaps)
-      newSitemaps += `Sitemap: ${sitemap}\n`
+  if (options.robots.sitemaps) {
+    const parseSitemaps = () => {
+      let newSitemaps = ''
 
-    return `${newSitemaps.trimEnd()}`
+      for (let sitemap of options.robots.sitemaps)
+        newSitemaps += `Sitemap: ${sitemap}\n`
+
+      return `${newSitemaps}`
+    }
+
+    robotsContent += parseSitemaps()
   }
 
-  robotsContent = rulesContent + parseSitemaps()
-
-  return robotsContent
+  return robotsContent.trim()
 }
 
 export { generateRobots }
