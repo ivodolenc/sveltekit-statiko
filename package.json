@@ -1,0 +1,50 @@
+{
+  "name": "sveltekit-statiko",
+  "version": "0.0.1",
+  "description": "A multi-featured assistant for SvelteKit static projects.",
+  "author": "Ivo Dolenc",
+  "license": "MIT",
+  "repository": "ivodolenc/sveltekit-statiko",
+  "homepage": "https://github.com/ivodolenc/sveltekit-statiko",
+  "funding": "https://github.com/sponsors/ivodolenc",
+  "type": "module",
+  "main": "src/plugin.js",
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "vite",
+    "svelte",
+    "sveltekit",
+    "vite-plugin",
+    "sveltekit-plugin",
+    "sveltekit-statiko",
+    "sveltekit-manifest",
+    "sveltekit-minifier",
+    "sveltekit-sitemap",
+    "sveltekit-robots",
+    "multi-featured"
+  ],
+  "scripts": {
+    "lint:eslint": "eslint .",
+    "lint:prettier": "prettier --check .",
+    "fix:eslint": "eslint --fix .",
+    "fix:prettier": "prettier --write .",
+    "release": "node scripts/release.js"
+  },
+  "devDependencies": {
+    "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "fast-glob": "^3.2.12",
+    "html-minifier-terser": "^7.0.0",
+    "logzy": "^0.2.3",
+    "merge-kit": "^1.0.0",
+    "prettier": "^2.7.1",
+    "prompts": "^2.4.2",
+    "semver": "^7.3.8"
+  },
+  "eslintConfig": {
+    "extends": "./.config/eslint.config.cjs"
+  },
+  "prettier": "./.config/prettier.config.cjs"
+}
