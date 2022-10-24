@@ -15,6 +15,7 @@
   "keywords": [
     "vite",
     "svelte",
+    "statiko",
     "sveltekit",
     "vite-plugin",
     "sveltekit-plugin",
@@ -22,8 +23,7 @@
     "sveltekit-manifest",
     "sveltekit-minifier",
     "sveltekit-sitemap",
-    "sveltekit-robots",
-    "multi-featured"
+    "sveltekit-robots"
   ],
   "scripts": {
     "lint:eslint": "eslint .",
@@ -33,7 +33,7 @@
     "release": "node scripts/release.js"
   },
   "devDependencies": {
-    "eslint": "^8.25.0",
+    "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.5.0",
     "fast-glob": "^3.2.12",
     "html-minifier-terser": "^7.0.0",
