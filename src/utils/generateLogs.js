@@ -1,30 +1,28 @@
 import { log } from './log.js'
 
-const generateLogs = options => {
+export const generateLogs = options => {
   log.n()
   log.info('Using plugin sveltekit-statiko')
 
-  if (options.sitemap.logs)
+  if (options.sitemap)
     log.details2(
-      `${options.sitemap.fileName} created in the "${options.sitemap.outDir}" directory`
+      `${options.sitemap.fileName} created in the "${options.buildDir}" directory`
     )
 
-  if (options.robots.logs)
+  if (options.robots)
     log.details2(
-      `${options.robots.fileName} created in the "${options.robots.outDir}" directory`
+      `${options.robots.fileName} created in the "${options.buildDir}" directory`
     )
 
-  if (options.manifest.logs)
+  if (options.manifest)
     log.details2(
-      `${options.manifest.fileName} created in the "${options.manifest.outDir}" directory`
+      `${options.manifest.fileName} created in the "${options.buildDir}" directory`
     )
 
-  if (options.minification.logs)
+  if (options.minification)
     log.details2(
-      `all html files from the "${options.minification.outDir}" directory are minified`
+      `all html files from the "${options.buildDir}" directory are minified`
     )
 
   log.lime(`  ✔ done`)
 }
-
-export { generateLogs }

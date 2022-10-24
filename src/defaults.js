@@ -1,35 +1,29 @@
-const defaults = {
+export const defaults = {
   siteUrl: '',
   logs: true,
+  buildDir: 'build',
   sitemap: {
-    outDir: 'build',
-    previewDir: '.svelte-kit/output/client',
     fileName: 'sitemap.xml',
+    lastmod: new Date().toISOString(),
     changefreq: 'daily',
     priority: 0.6,
-    lastmod: new Date().toISOString(),
     routes: [],
-    exclude: [],
-    logs: true
+    exclude: []
   },
   robots: {
-    outDir: 'build',
-    previewDir: '.svelte-kit/output/client',
     fileName: 'robots.txt',
-    logs: true,
     rules: [],
     sitemaps: []
   },
   manifest: {
-    staticDir: 'static',
-    outDir: 'build',
-    previewDir: '.svelte-kit/output/client',
+    appTemplate: 'src/app.html',
     fileName: 'site.webmanifest',
-    logs: true,
+    link: true,
     rules: {
       name: process.env.npm_package_name,
       short_name: process.env.npm_package_name,
       description: process.env.npm_package_description,
+      start_url: '/?standalone=true',
       display: 'standalone',
       theme_color: '#ffffff',
       background_color: '#ffffff',
@@ -37,8 +31,6 @@ const defaults = {
     }
   },
   minification: {
-    outDir: 'build',
-    logs: true,
     exclude: [],
     rules: {
       collapseWhitespace: true,
@@ -49,5 +41,3 @@ const defaults = {
     }
   }
 }
-
-export { defaults }

@@ -1,28 +1,25 @@
 const parseRoutes = (options, files) => {
   let newRoutes = []
   let customRoutes = options.sitemap.routes
+  let buildDir = options.buildDir
 
   for (let file of files) {
-    let routeSlug = file
-      .replace(options.sitemap.outDir + '/', '')
-      .replace(/index|.html/g, '')
-
-    let routeName = routeSlug === '' ? 'index' : routeSlug
+    let routeSlug = file.replace(buildDir, '').replace(/index|.html/g, '')
 
     const routeDetails = {
-      name: routeName,
-      url: `${options.siteUrl}/${routeSlug}`,
+      id: routeSlug,
+      url: `${options.siteUrl}${routeSlug}`,
+      lastmod: options.sitemap.lastmod,
       changefreq: options.sitemap.changefreq,
-      priority: options.sitemap.priority,
-      lastmod: options.sitemap.lastmod
+      priority: options.sitemap.priority
     }
 
     if (customRoutes.length) {
-      let routeMatchName = customRoutes.filter(
-        route => route.name === routeDetails.name
+      let routeMatchId = customRoutes.filter(
+        route => route.id === routeDetails.id
       )
 
-      let routeMatchDetails = routeMatchName.flat()
+      let routeMatchDetails = routeMatchId.flat()
       let routeCustomDetails = Object.assign(routeDetails, ...routeMatchDetails)
 
       newRoutes.push(routeCustomDetails)
@@ -31,21 +28,28 @@ const parseRoutes = (options, files) => {
     }
   }
 
-  return newRoutes.reverse()
+  newRoutes.sort((a, b) => b.id.length - a.id.length)
+
+  return newRoutes.slice().reverse()
 }
 
-const generateSitemap = (options, routes) => {
+export const generateSitemap = (options, routes) => {
   let parsedRoutes = parseRoutes(options, routes)
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`
   let urlsetOpen = `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`
   let urlsetClose = `</urlset>`
   let urlOpen = `<url>\n`
   let urlClose = `</url>\n`
+  let urls = ''
 
   const generateUrls = () => {
-    let urls = ''
-
     for (let route of parsedRoutes) {
+      const loc = `<loc>${route.url}</loc>\n`
+
+      const lastmod = options.sitemap.lastmod
+        ? `<lastmod>${route.lastmod}</lastmod>\n`
+        : ''
+
       const changefreq = options.sitemap.changefreq
         ? `<changefreq>${route.changefreq}</changefreq>\n`
         : ''
@@ -54,13 +58,7 @@ const generateSitemap = (options, routes) => {
         ? `<priority>${route.priority}</priority>\n`
         : ''
 
-      const lastmod = options.sitemap.lastmod
-        ? `<lastmod>${route.lastmod}</lastmod>\n`
-        : ''
-
-      const loc = `<loc>${route.url}</loc>\n`
-
-      urls += urlOpen + loc + changefreq + priority + lastmod + urlClose
+      urls += urlOpen + loc + lastmod + changefreq + priority + urlClose
     }
 
     return urls.replace(/^\s*[\r\n]/gm, '')
@@ -70,5 +68,3 @@ const generateSitemap = (options, routes) => {
 
   return generateContent
 }
-
-export { generateSitemap }

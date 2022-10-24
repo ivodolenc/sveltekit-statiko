@@ -14,7 +14,7 @@ const parseRules = block => {
   return newRules
 }
 
-const generateRobots = options => {
+export const generateRobots = options => {
   let robotsContent = ''
   let rulesContent = ''
 
@@ -38,5 +38,3 @@ const generateRobots = options => {
 
   return robotsContent.trim()
 }
-
-export { generateRobots }
