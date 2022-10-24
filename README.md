@@ -11,7 +11,6 @@
 - Helps you to easily manage crawler traffic to your site
 - Runs only during the build process to maximize the dev workflow
 - Surprisingly fast, lightweight and efficient solution
-- Saves you headaches and manual changes
 - Designed for SSG rendering mode
 
 ## Quick Start
@@ -27,11 +26,11 @@ yarn add -D sveltekit-statiko # or npm i -D sveltekit-statiko
 ```js
 // vite.config.js
 
-import statiko from 'sveltekit-statiko'
+import { Statiko } from 'sveltekit-statiko'
 
 export default {
   plugins: [
-    statiko({
+    Statiko({
       siteUrl: 'https://www.website.com' // Set your website url
     })
   ]
@@ -40,18 +39,22 @@ export default {
 
 That's it! Start developing your app!
 
-## Options
+**Statiko's** minimal setup will automatically generate `sitemap.xml`, `robots.txt` and `site.webmanifest` files with all dynamic content during the `build` process.
 
-All options can be customized in the Vite config file through `statico()` plugin. See all [default](src/defaults.js) settings.
+To see and test all changes, simply run the `preview` command.
+
+## Configuration
+
+Options can be customized through `Statico()` plugin. See all [defaults](src/defaults.js).
 
 ```js
 // vite.config.js
 
-import statiko from 'sveltekit-statiko'
+import { Statiko } from 'sveltekit-statiko'
 
 export default {
   plugins: [
-    statiko({
+    Statiko({
       siteUrl: 'https://www.website.com',
       sitemap: {
         // ...
@@ -67,7 +70,7 @@ export default {
 - Type: `String`
 - Required: `true`
 
-Defines site's full url.
+Defines website url for production.
 
 This option is **required** because it is used in _sitemap.xml_ and _robots.txt_ files.
 
@@ -96,7 +99,9 @@ However, if the _sitemap_ and _robots_ features will not be used, set it to `fal
 
 Automatically generates a _sitemap.xml_ file with all dynamic content during the `build` process.
 
-After the build process is done, run `preview` command to see it in action.
+If specified, the `trailingSlash` option will be automatically parsed so there is no need for additional settings.
+
+After the build process is done, run the `preview` command to see it in action.
 
 ```js
 // Defaults
@@ -104,9 +109,9 @@ After the build process is done, run `preview` command to see it in action.
 {
   sitemap: {
     fileName: 'sitemap.xml',
+    lastmod: new Date().toISOString(),
     changefreq: 'daily',
     priority: 0.6,
-    lastmod: new Date().toISOString(),
     routes: [],
     exclude: []
   }
@@ -122,15 +127,15 @@ Default settings will generate this content:
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.website.com/</loc>
+    <lastmod>2022-10-18T08:51:38.126Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
-    <lastmod>2022-10-18T08:51:38.126Z</lastmod>
   </url>
   <url>
     <loc>https://www.website.com/about</loc>
+    <lastmod>2022-10-18T08:51:38.126Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
-    <lastmod>2022-10-18T08:51:38.126Z</lastmod>
   </url>
 </urlset>
 ```
@@ -162,12 +167,43 @@ Defines the file name.
 }
 ```
 
+### sitemap.lastmod
+
+- Type: `String`
+- Default: `new Date().toISOString()`
+
+Defines the last date when the specified page was modified. It uses the format `YYYY-MM-DD` or `YYYY-MM-DDThh:mm:ssTZD`.
+
+```js
+// Defaults
+
+{
+  sitemap: {
+    lastmod: new Date().toISOString()
+  }
+}
+```
+
+To disable the option, set it to `false`.
+
+```js
+// Disables the option
+
+{
+  sitemap: {
+    lastmod: false
+  }
+}
+```
+
 ### sitemap.changefreq
 
 - Type: `String`
 - Default: `'daily'`
 
-Defines how frequently the page is likely to change. Available values are `always`, `hourly`, `weekly`, `monthly`, `yearly` and `never`.
+Defines how frequently the page is likely to change.
+
+Available values are `always`, `hourly`, `weekly`, `monthly`, `yearly` and `never`.
 
 ```js
 // Defaults
@@ -220,35 +256,6 @@ To disable the option, set it to `false`.
 }
 ```
 
-### sitemap.lastmod
-
-- Type: `String`
-- Default: `new Date().toISOString()`
-
-Defines the last date when the specified page was modified. It uses the format `YYYY-MM-DD` or `YYYY-MM-DDThh:mm:ssTZD`.
-
-```js
-// Defaults
-
-{
-  sitemap: {
-    lastmod: new Date().toISOString()
-  }
-}
-```
-
-To disable the option, set it to `false`.
-
-```js
-// Disables the option
-
-{
-  sitemap: {
-    lastmod: false
-  }
-}
-```
-
 ### sitemap.routes
 
 - Type: `Array`
@@ -266,6 +273,8 @@ An array of objects that allows customization for each route separately.
 }
 ```
 
+This is possible via a unique `id`, which is basically a `/route-slug`.
+
 ```js
 // Example
 
@@ -273,17 +282,18 @@ An array of objects that allows customization for each route separately.
   sitemap: {
     routes: [
       {
-        name: 'index',
+        id: '/', // index page
+        lastmod: '2022-09-03',
         changefreq: 'daily',
-        priority: 1.0,
-        lastmod: '2022-09-03'
+        priority: 1.0
       },
       {
-        name: 'about',
+        id: '/about', // about page
+        lastmod: '2022-10-18',
         changefreq: 'weekly',
-        priority: 0.7,
-        lastmod: '2022-10-18'
+        priority: 0.7
       }
+      // ...
     ]
   }
 }
@@ -303,10 +313,7 @@ An array of glob patterns that exclude routes from the sitemap.
   sitemap: {
     exclude: [
       // Excluded directories
-      'build/_app/**',
-      'build/favicons/**',
-      'build/images/**',
-      'build/fonts/**'
+      'build/_app/**'
     ]
   }
 }
@@ -319,7 +326,7 @@ An array of glob patterns that exclude routes from the sitemap.
 
 Automatically generates a _robots.txt_ file with all dynamic content during the `build` process.
 
-After the build process is done, run `preview` command to see it in action.
+After the build process is done, run the `preview` command to see it in action.
 
 ```js
 // Defaults
@@ -374,7 +381,9 @@ Defines the file name.
 - Type: `Array`
 - Default: `[ ... ]`
 
-An array of objects that define _robot's_ rules. Each object is treated as a separate block of rules.
+An array of objects that define _robots_ rules. Each object is treated as a separate block of rules.
+
+See all available [rules](https://developers.google.com/search/docs/crawling-indexing/robots/create-robots-txt).
 
 ```js
 // Defaults
@@ -438,14 +447,14 @@ Allow: /url-5
 - Type: `Array`
 - Default: `[ ... ]`
 
-An array that define _robot's_ sitemaps. Each value is treated as a new sitemap.
+An array of values that define _robots_ sitemaps. Each value is treated as a new url.
 
 ```js
 // Defaults
 
 {
   robots: {
-    sitemaps: [siteUrl + sitemap.fileName] // https://www.website.com/sitemap.xml
+    sitemaps: ['https://www.website.com/sitemap.xml']
   }
 }
 ```
@@ -484,6 +493,231 @@ To disable the option, set it to `false`.
 }
 ```
 
+## Manifest (Web App)
+
+- Type: `Object`
+- Default: `{ ... }`
+
+Automatically generates a _site.webmanifest_ file with all dynamic content during the `build` process.
+
+After the build process is done, run the `preview` command to see it in action.
+
+By default, the _manifest_ `<link />` tag will be injected into the `<head>` section so you don't have to worry about that. Of course, if you want to disable that and manage it manually, set the `link` option to `false`.
+
+```js
+// Defaults
+
+{
+  manifest: {
+    fileName: 'site.webmanifest',
+    link: true,
+    rules: {
+      name: process.env.npm_package_name,
+      short_name: process.env.npm_package_name,
+      description: process.env.npm_package_description,
+      start_url: '/?standalone=true',
+      display: 'standalone',
+      theme_color: '#ffffff',
+      background_color: '#ffffff',
+      icons: []
+    }
+  }
+}
+```
+
+Default settings will generate this content:
+
+```json
+{
+  "name": "your-package-name",
+  "short_name": "your-package-name",
+  "description": "your-package-description",
+  "start_url": "/?standalone=true",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "icons": []
+}
+```
+
+To completely disable the _manifest_ feature, set it to `false`.
+
+```js
+// Disables the feature
+
+{
+  manifest: false,
+}
+```
+
+### manifest.fileName
+
+- Type: `String`
+- Default: `'site.webmanifest'`
+
+Defines the file name.
+
+```js
+// Defaults
+
+{
+  manifest: {
+    fileName: 'site.webmanifest'
+  }
+}
+```
+
+### manifest.link
+
+- Type: `Boolean`
+- Default: `true`
+
+Automatically injects manifest's `<link />` into the `<head>` section.
+
+```js
+// Defaults
+
+{
+  manifest: {
+    link: true
+  }
+}
+```
+
+### manifest.rules
+
+- Type: `Object`
+- Default: `{ ... }`
+
+Defines _manifest_ rules. See all available [rules](https://developer.mozilla.org/en-US/docs/Web/Manifest#members).
+
+```js
+// Defaults
+
+{
+  manifest: {
+    rules: {
+      name: process.env.npm_package_name,
+      short_name: process.env.npm_package_name,
+      description: process.env.npm_package_description,
+      start_url: '/?standalone=true',
+      display: 'standalone',
+      theme_color: '#ffffff',
+      background_color: '#ffffff',
+      icons: []
+    }
+  }
+}
+```
+
+```js
+// Example
+
+{
+  manifest: {
+    rules: {
+      name: 'website-name',
+      icons: [
+        {
+          src: '/icon-32x32.png',
+          sizes: '32x32',
+          type: 'image/png'
+        },
+        {
+          src: '/icon-192x192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: '/icon-512x512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        }
+      ],
+      orientation: 'portrait'
+      // ...
+    }
+  }
+}
+```
+
+## Minification
+
+- Type: `Object`
+- Default: `{ ... }`
+
+Automatically minifies all _.html_ files for production.
+
+```js
+// Defaults
+
+{
+  minification: {
+    exclude: [],
+    rules: {
+      collapseWhitespace: true,
+      collapseInlineTagWhitespace: true,
+      removeComments: true,
+      minifyCSS: true,
+      minifyJS: true
+    }
+  }
+}
+```
+
+To completely disable the _minification_ feature, set it to `false`.
+
+```js
+// Disables the feature
+
+{
+  minification: false,
+}
+```
+
+### minification.exclude
+
+- Type: `Array`
+- Default: `[]`
+
+An array of glob patterns that exclude _.html_ files from the minification.
+
+```js
+// Defaults
+
+{
+  minification: {
+    exclude: [
+      // Excluded directories
+      'build/_app/**'
+    ]
+  }
+}
+```
+
+### minification.rules
+
+- Type: `Object`
+- Default: `{ ... }`
+
+Minification is done by _html-minifier-terser_ under the hood. See all available [rules](https://github.com/terser/html-minifier-terser#options-quick-reference).
+
+```js
+// Defaults
+
+{
+  minification: {
+    rules: {
+      collapseWhitespace: true,
+      collapseInlineTagWhitespace: true,
+      removeComments: true,
+      minifyCSS: true,
+      minifyJS: true
+    }
+  }
+}
+```
+
 ## Logs
 
 - Type: `Boolean`
@@ -499,19 +733,9 @@ Manages the default terminal logs when the build process is complete. By default
 }
 ```
 
-To disable the option, set it to `false`.
-
-```js
-// Disables the option
-
-{
-  logs: false
-}
-```
-
-Log example:
-
 ```txt
+// Example
+
 ...
 
 > Using @sveltejs/adapter-static
@@ -522,8 +746,18 @@ Log example:
   ─ robots.txt created in the "build" directory
   ─ sitemap.xml created in the "build" directory
   ─ manifest.json created in the "build" directory
-  ─ All html files from the "build" directory are minified
+  ─ all html files from the "build" directory are minified
   ✔ done
+```
+
+To disable the option, set it to `false`.
+
+```js
+// Disables the option
+
+{
+  logs: false
+}
 ```
 
 ## Show Support
