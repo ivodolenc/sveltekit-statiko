@@ -1,3 +1,7 @@
+<p align="center">
+  <img src=".assets/cover.svg" />
+</p>
+
 <h1 align="center">SvelteKit Statiko</h1>
 
 <p align="center">A multi-featured assistant for SvelteKit static projects.</p>
@@ -55,11 +59,7 @@ import { Statiko } from 'sveltekit-statiko'
 export default {
   plugins: [
     Statiko({
-      siteUrl: 'https://www.website.com',
-      sitemap: {
-        // ...
-      }
-      // ...
+      // plugin options ...
     })
   ]
 }
@@ -99,7 +99,7 @@ However, if the _sitemap_ and _robots_ features will not be used, set it to `fal
 
 Automatically generates a _sitemap.xml_ file with all dynamic content during the `build` process.
 
-If specified, the `trailingSlash` option will be automatically parsed so there is no need for additional settings.
+Also, the `trailingSlash` option will be automatically detected and parsed accordingly so there is no need for additional settings.
 
 After the build process is done, run the `preview` command to see it in action.
 
