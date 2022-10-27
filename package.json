@@ -32,13 +32,15 @@
     "fix:prettier": "prettier --write .",
     "release": "node scripts/release.js"
   },
-  "devDependencies": {
-    "eslint": "^8.26.0",
-    "eslint-config-prettier": "^8.5.0",
+  "dependencies": {
     "fast-glob": "^3.2.12",
     "html-minifier-terser": "^7.0.0",
     "logzy": "^0.2.3",
-    "merge-kit": "^1.0.0",
+    "merge-kit": "^1.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.7.1",
     "prompts": "^2.4.2",
     "semver": "^7.3.8"
