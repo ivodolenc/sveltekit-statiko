@@ -3,21 +3,16 @@ module.exports = {
 
   env: {
     browser: true,
-    node: true
+    node: true,
+    es2022: true
   },
 
   parserOptions: {
     sourceType: 'module',
-    ecmaVersion: 2020
+    ecmaVersion: 2022
   },
 
   extends: ['eslint:recommended', 'eslint-config-prettier'],
 
-  ignorePatterns: [
-    '.DS_Store',
-    'node_modules',
-    'pnpm-lock.yaml',
-    'package-lock.json',
-    'yarn.lock'
-  ]
+  ignorePatterns: ['.DS_Store', 'node_modules', 'package-lock.json']
 }
