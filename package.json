@@ -13,17 +13,13 @@
     "src"
   ],
   "keywords": [
-    "vite",
     "svelte",
     "statiko",
     "sveltekit",
     "vite-plugin",
     "sveltekit-plugin",
     "sveltekit-statiko",
-    "sveltekit-manifest",
-    "sveltekit-minifier",
-    "sveltekit-sitemap",
-    "sveltekit-robots"
+    "svelte-statiko"
   ],
   "scripts": {
     "lint:eslint": "eslint .",
@@ -33,13 +29,13 @@
     "release": "node scripts/release.js"
   },
   "dependencies": {
-    "fast-glob": "^3.2.12",
-    "html-minifier-terser": "^7.0.0",
-    "logzy": "^0.2.3",
-    "merge-kit": "^1.0.0"
+    "@swc/html": "^0.0.18",
+    "logzy": "^1.0.0",
+    "merge-kit": "^1.0.0",
+    "sharp": "^0.31.2"
   },
   "devDependencies": {
-    "eslint": "^8.26.0",
+    "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.7.1",
     "prompts": "^2.4.2",
