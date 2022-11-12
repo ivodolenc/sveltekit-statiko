@@ -1,14 +1,13 @@
 import { readFileSync } from 'fs'
 import { execSync } from 'child_process'
 import { inc } from 'semver'
-import { log } from '../src/utils/index.js'
 import prompts from 'prompts'
+import { log } from '../src/utils/index.js'
 
 const pkg = JSON.parse(readFileSync('./package.json'))
 const onCancel = () => process.exit()
 
-const updatePackageVersion = async () => {
-  log.n()
+async function updatePackageVersion() {
   log.info(`Current package version: ${pkg.version}`)
 
   const patchVer = inc(pkg.version, 'patch')
@@ -30,12 +29,12 @@ const updatePackageVersion = async () => {
   const { version } = await prompts(question, { onCancel })
   const newVersion = inc(pkg.version, version)
 
-  execSync(`yarn version --no-git-tag-version --${version}`)
+  execSync(`npm version --no-git-tag-version ${version}`)
 
   return commitChanges(newVersion)
 }
 
-const commitChanges = async nv => {
+async function commitChanges(nv) {
   let command = `git add package.json && git commit --no-verify -m 'chore(release): ${nv}' && git push --no-verify && npm publish`
 
   const question = {
@@ -54,10 +53,8 @@ const commitChanges = async nv => {
   if (answer) {
     execSync(command)
 
-    log.n()
-    log.info(`Package version updated and pushed to the Github repository!`)
-    log.success(`New package version: ${nv}`)
-    log.n()
+    log.info('Package version updated and pushed to the Github repository!')
+    log('lime', `✔ New package version: ${nv}`)
   }
 }
 
