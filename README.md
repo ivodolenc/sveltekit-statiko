@@ -695,7 +695,6 @@ Default settings will generate this content:
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "icons": [
-    // links will be automatically added
     {
       "src": "/favicons/icon-64-nqfe8lpy.png",
       "sizes": "64x64",
