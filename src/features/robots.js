@@ -41,7 +41,7 @@ function generateRobots(options) {
 }
 
 export function Robots(options) {
-  const { buildDir, outDir, robots } = options
+  const { buildDir, outDir, robots, sitemap } = options
 
   try {
     let status, message
@@ -60,7 +60,7 @@ export function Robots(options) {
 
       if (isEmpty(robots.rules)) robots.rules.push(defaultsRules)
 
-      if (robots.sitemaps && isEmpty(robots.sitemaps))
+      if (sitemap && isEmpty(robots.sitemaps))
         robots.sitemaps.push(defaultSitemap)
 
       let robotsContent = generateRobots(options)

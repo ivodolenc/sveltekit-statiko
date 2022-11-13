@@ -15,7 +15,7 @@ import {
 
 export const run = {
   start: options => {
-    if (!options.siteUrl) {
+    if (!options.siteUrl && options.sitemap) {
       log.error('"siteUrl" option must be specified')
 
       return process.exit()
