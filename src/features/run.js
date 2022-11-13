@@ -29,7 +29,7 @@ export const run = {
     let features = [Icons(options), Manifest(options)]
 
     return Promise.all(features).catch(err => {
-      if (err) throw new Error(err)
+      throw new Error(err)
     })
   },
 
@@ -63,7 +63,7 @@ export const run = {
         }
       })
       .catch(err => {
-        if (err) throw new Error(err)
+        throw new Error(err)
       })
   }
 }

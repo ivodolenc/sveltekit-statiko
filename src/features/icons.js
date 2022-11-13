@@ -60,6 +60,7 @@ export function IconsLinks(options) {
     if (!outDir || outDir.includes('../') || outDir.startsWith('/')) {
       let err = `icons > "outDir" option cannot be empty or specify a path outside a directory.`
       log.error(err)
+
       return process.exit()
     }
 
@@ -70,8 +71,6 @@ export function IconsLinks(options) {
         generateManifestLink(options, size)
       }
     }
-
-    return links
   }
 
   return links
@@ -96,7 +95,7 @@ export async function Icons(options) {
       }
     }
   } catch (err) {
-    if (err) throw new Error(err)
+    throw new Error(err)
   }
 }
 
@@ -104,31 +103,28 @@ export async function IconsUnlink(options) {
   const { buildDir, staticDir, icons } = options
 
   try {
+    let status, message
+
     if (icons && iconExists) {
-      let status = 'success'
-      let message = `icons are created in the "${buildDir}/${icons.outDir}" directory`
+      status = 'success'
+      message = `icons are created in the "${buildDir}/${icons.outDir}" directory`
 
       await rm(`${staticDir}/${rmOutDir[0]}`, {
         recursive: true,
         force: true
       })
-
-      return {
-        status,
-        message
-      }
     }
 
     if (icons && !iconExists) {
-      let status = 'warn'
-      let message = `automatic icon generation is skipped because "icon.png" not found`
+      status = 'warn'
+      message = `automatic icon generation is skipped because "icon.png" not found`
+    }
 
-      return {
-        status,
-        message
-      }
+    return {
+      status,
+      message
     }
   } catch (err) {
-    if (err) throw new Error(err)
+    throw new Error(err)
   }
 }

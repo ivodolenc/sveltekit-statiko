@@ -75,9 +75,12 @@ export async function Sitemap(options) {
   const { buildDir, outDir, sitemap } = options
 
   try {
+    let status, message
+
     if (sitemap) {
-      let status = 'success'
-      let message = `${sitemap.fileName} file is created in the "${buildDir}" directory`
+      status = 'success'
+      message = `${sitemap.fileName} file is created in the "${buildDir}" directory`
+
       let exclude = [`${buildDir}/_app/**`, ...sitemap.exclude]
       let files = await fg([`${buildDir}/**/*.html`], {
         ignore: exclude
@@ -88,13 +91,13 @@ export async function Sitemap(options) {
       let sitemapContent = generateSitemap(options, files)
 
       for (let _file of [file, fileCopy]) writeFile(_file, sitemapContent)
+    }
 
-      return {
-        status,
-        message
-      }
+    return {
+      status,
+      message
     }
   } catch (err) {
-    if (err) throw new Error(err)
+    throw new Error(err)
   }
 }

@@ -13,6 +13,7 @@ function parseRules(block) {
       }
     }
   }
+
   return `${newRules}\n`
 }
 
@@ -43,9 +44,12 @@ export function Robots(options) {
   const { buildDir, outDir, robots } = options
 
   try {
+    let status, message
+
     if (robots) {
-      let status = 'success'
-      let message = `${robots.fileName} file is created in the "${buildDir}" directory`
+      status = 'success'
+      message = `${robots.fileName} file is created in the "${buildDir}" directory`
+
       let file = `${buildDir}/${robots.fileName}`
       let fileCopy = `${outDir}/${robots.fileName}`
       let defaultSitemap = `${options.siteUrl}/${options.sitemap.fileName}`
@@ -62,13 +66,13 @@ export function Robots(options) {
       let robotsContent = generateRobots(options)
 
       for (let _file of [file, fileCopy]) writeFile(_file, robotsContent)
+    }
 
-      return {
-        status,
-        message
-      }
+    return {
+      status,
+      message
     }
   } catch (err) {
-    if (err) throw new Error(err)
+    throw new Error(err)
   }
 }

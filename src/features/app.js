@@ -23,7 +23,7 @@ export async function AppTransformStart(options, transform) {
       writeFile(appTemplate, transformed)
     }
   } catch (err) {
-    if (err) throw new Error(err)
+    throw new Error(err)
   }
 }
 
@@ -33,6 +33,6 @@ export async function AppTransformClose(options) {
   try {
     if (icons.links || manifest.link) await writeFile(appTemplate, appContent)
   } catch (err) {
-    if (err) throw new Error(err)
+    throw new Error(err)
   }
 }

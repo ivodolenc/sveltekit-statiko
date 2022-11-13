@@ -15,11 +15,7 @@ export function ManifestLink(options) {
     ext = parseName[1]
     fileName = `${name}${hash}.${ext}`
 
-    if (manifest.link) {
-      link = `<link rel="manifest" href="/${fileName}" />`
-    }
-
-    return link
+    if (manifest.link) link = `<link rel="manifest" href="/${fileName}" />`
   }
 
   return link
@@ -44,7 +40,7 @@ export async function Manifest(options) {
       writeFile(file, content)
     }
   } catch (err) {
-    if (err) throw new Error(err)
+    throw new Error(err)
   }
 }
 
@@ -52,18 +48,20 @@ export async function ManifestUnlink(options) {
   const { buildDir, staticDir, manifest } = options
 
   try {
+    let status, message
+
     if (manifest) {
-      let status = 'success'
-      let message = `${manifest.fileName} is created in the "${buildDir}" directory`
+      status = 'success'
+      message = `${manifest.fileName} is created in the "${buildDir}" directory`
 
       await unlink(`${staticDir}/${fileName}`)
+    }
 
-      return {
-        status,
-        message
-      }
+    return {
+      status,
+      message
     }
   } catch (err) {
-    if (err) throw new Error(err)
+    throw new Error(err)
   }
 }
