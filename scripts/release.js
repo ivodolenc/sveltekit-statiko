@@ -35,7 +35,8 @@ async function updatePackageVersion() {
 }
 
 async function commitChanges(nv) {
-  let command = `git add package.json && git commit --no-verify -m 'chore(release): ${nv}' && git push --no-verify && npm publish`
+  let files = `package.json package-lock.json`
+  let command = `git add ${files} && git commit --no-verify -m 'chore(release): ${nv}' && git push --no-verify && npm publish`
 
   const question = {
     type: 'select',
