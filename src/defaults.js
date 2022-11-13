@@ -2,6 +2,7 @@ export const defaults = {
   siteUrl: '',
   logs: true,
   buildDir: 'build',
+  appTemplate: 'src/app.html',
   sitemap: {
     fileName: 'sitemap.xml',
     lastmod: new Date().toISOString(),
@@ -15,15 +16,24 @@ export const defaults = {
     rules: [],
     sitemaps: []
   },
+  icons: {
+    src: 'static/icon.png',
+    outDir: 'favicons',
+    links: true,
+    hash: true,
+    sizes: [32, 64, 180, 192, 512],
+    quality: {
+      jpeg: { quality: 80 },
+      png: { compressionLevel: 6 }
+    }
+  },
   manifest: {
-    appTemplate: 'src/app.html',
     fileName: 'site.webmanifest',
     link: true,
+    hash: true,
     rules: {
-      name: process.env.npm_package_name,
-      short_name: process.env.npm_package_name,
-      description: process.env.npm_package_description,
-      start_url: '/?standalone=true',
+      id: '/?source=pwa',
+      start_url: '/?source=pwa',
       display: 'standalone',
       theme_color: '#ffffff',
       background_color: '#ffffff',
@@ -33,11 +43,7 @@ export const defaults = {
   minification: {
     exclude: [],
     rules: {
-      collapseWhitespace: true,
-      collapseInlineTagWhitespace: true,
-      removeComments: true,
-      minifyCSS: true,
-      minifyJS: true
+      collapseWhitespaces: 'all'
     }
   }
 }

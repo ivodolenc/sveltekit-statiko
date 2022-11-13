@@ -8,7 +8,7 @@
 
 ## Features
 
-- Generates sitemap, robots and manifest on the fly
+- Generates sitemap, robots, icons and manifest on the fly
 - Automatically minifies all html files for production
 - Supports static and dynamic routes
 - Allows advanced customization for each feature separately
@@ -22,7 +22,7 @@
 1. Install `sveltekit-statiko` to your project
 
 ```sh
-yarn add -D sveltekit-statiko # or npm i -D sveltekit-statiko
+npm i -D sveltekit-statiko
 ```
 
 2. Enable the plugin in the Vite configuration file
@@ -68,11 +68,11 @@ export default {
 ## Site Url
 
 - Type: `String`
-- Required: `true`
+- Default: `''`
 
 Defines website url for production.
 
-This option is **required** because it is used in _sitemap.xml_ and _robots.txt_ files.
+If the `sitemap` feature won't be used, feel free to skip this option.
 
 ```js
 // Defaults
@@ -82,13 +82,11 @@ This option is **required** because it is used in _sitemap.xml_ and _robots.txt_
 }
 ```
 
-However, if the _sitemap_ and _robots_ features will not be used, set it to `false`.
-
 ```js
-// Disables the option
+// Example
 
 {
-  siteUrl: false,
+  siteUrl: 'https://www.website.com'
 }
 ```
 
@@ -493,6 +491,163 @@ To disable the option, set it to `false`.
 }
 ```
 
+## Icons
+
+- Type: `Object`
+- Default: `{ ... }`
+
+Automatically generates site favicons.
+
+By default, it scans the `static/` directory for `icon.png` and automatically generates all other favicons (32, 64, 180, 192, 512) from that file.
+
+Of course, icon links will be also injected into the _.html_ and _.webmanifest_ files.
+
+So all you need to do is simply put `icon.png` in the `static/` directory and that's it. Recommended icon size is `512x512` px.
+
+```js
+// Defaults
+
+{
+  icons: {
+    src: 'static/icon.png',
+    outDir: 'favicons',
+    links: true,
+    hash: true,
+    sizes: [32, 64, 180, 192, 512],
+    quality: {
+      jpeg: { quality: 80 },
+      png: { compressionLevel: 6 }
+    }
+  }
+}
+```
+
+To completely disable the _icons_ feature, set it to `false`.
+
+```js
+// Disables the feature
+
+{
+  icons: false,
+}
+```
+
+### icons.src
+
+- Type: `String`
+- Default: `'static/icon.png'`
+
+Defines the icon's source.
+
+```js
+// Defaults
+
+{
+  icons: {
+    src: 'static/icon.png',
+  }
+}
+```
+
+```js
+// Example
+
+{
+  icons: {
+    // Set different source if needed
+    src: 'src/assets/images/icon.png',
+  }
+}
+```
+
+### icons.outDir
+
+- Type: `String`
+- Default: `'favicons'`
+
+Defines the icon's output directory. This option cannot be empty or specify a path outside a directory.
+
+```js
+// Defaults
+
+{
+  icons: {
+    outDir: 'favicons',
+  }
+}
+```
+
+### icons.links
+
+- Type: `Boolean`
+- Default: `true`
+
+Automatically inserts icon links in `.html` and `.webmanifest` files.
+
+```js
+// Defaults
+
+{
+  icons: {
+    link: true
+  }
+}
+```
+
+### icons.hash
+
+- Type: `Boolean`
+- Default: `true`
+
+Appends a random string to the icon filename.
+
+```js
+// Defaults
+
+{
+  icons: {
+    hash: true
+  }
+}
+```
+
+### icons.sizes
+
+- Type: `Array`
+- Default: `[32, 64, 180, 192, 512]`
+
+Specifies all other sizes that will be generated from the main `icon.png` file.
+
+```js
+// Defaults
+
+{
+  icons: {
+    sizes: [32, 64, 180, 192, 512],
+  }
+}
+```
+
+### icons.quality
+
+- Type: `Object`
+- Default: `{ ... }`
+
+Specifies compression level.
+
+```js
+// Defaults
+
+{
+  icons: {
+    quality: {
+      jpeg: { quality: 80 },
+      png: { compressionLevel: 6 }
+    }
+  }
+}
+```
+
 ## Manifest (Web App)
 
 - Type: `Object`
@@ -511,11 +666,13 @@ By default, the _manifest_ `<link />` tag will be injected into the `<head>` sec
   manifest: {
     fileName: 'site.webmanifest',
     link: true,
+    hash: true,
     rules: {
-      name: process.env.npm_package_name,
-      short_name: process.env.npm_package_name,
-      description: process.env.npm_package_description,
-      start_url: '/?standalone=true',
+      name: package_name,
+      short_name: package_name,
+      description: package_description,
+      id: '/?source=pwa',
+      start_url: '/?source=pwa',
       display: 'standalone',
       theme_color: '#ffffff',
       background_color: '#ffffff',
@@ -532,11 +689,29 @@ Default settings will generate this content:
   "name": "your-package-name",
   "short_name": "your-package-name",
   "description": "your-package-description",
+  "id": "/?source=pwa",
   "start_url": "/?standalone=true",
   "display": "standalone",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "icons": []
+  "icons": [
+    // links will be automatically added
+    {
+      "src": "/favicons/icon-64-nqfe8lpy.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicons/icon-192-nqfe8lpy.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicons/icon-512-nqfe8lpy.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
 ```
 
@@ -584,6 +759,23 @@ Automatically injects manifest's `<link />` into the `<head>` section.
 }
 ```
 
+### manifest.hash
+
+- Type: `Boolean`
+- Default: `true`
+
+Appends a random string to the manifest filename.
+
+```js
+// Defaults
+
+{
+  manifest: {
+    hash: true
+  }
+}
+```
+
 ### manifest.rules
 
 - Type: `Object`
@@ -597,10 +789,11 @@ Defines _manifest_ rules. See all available [rules](https://developer.mozilla.or
 {
   manifest: {
     rules: {
-      name: process.env.npm_package_name,
-      short_name: process.env.npm_package_name,
-      description: process.env.npm_package_description,
-      start_url: '/?standalone=true',
+      name: package_name,
+      short_name: package_name,
+      description: package_description,
+      id: '/?source=pwa',
+      start_url: '/?source=pwa',
       display: 'standalone',
       theme_color: '#ffffff',
       background_color: '#ffffff',
@@ -617,23 +810,6 @@ Defines _manifest_ rules. See all available [rules](https://developer.mozilla.or
   manifest: {
     rules: {
       name: 'website-name',
-      icons: [
-        {
-          src: '/icon-32x32.png',
-          sizes: '32x32',
-          type: 'image/png'
-        },
-        {
-          src: '/icon-192x192.png',
-          sizes: '192x192',
-          type: 'image/png'
-        },
-        {
-          src: '/icon-512x512.png',
-          sizes: '512x512',
-          type: 'image/png'
-        }
-      ],
       orientation: 'portrait'
       // ...
     }
@@ -655,11 +831,7 @@ Automatically minifies all _.html_ files for production.
   minification: {
     exclude: [],
     rules: {
-      collapseWhitespace: true,
-      collapseInlineTagWhitespace: true,
-      removeComments: true,
-      minifyCSS: true,
-      minifyJS: true
+      collapseWhitespaces: 'all'
     }
   }
 }
@@ -700,7 +872,7 @@ An array of glob patterns that exclude _.html_ files from the minification.
 - Type: `Object`
 - Default: `{ ... }`
 
-Minification is done by _html-minifier-terser_ under the hood. See all available [rules](https://github.com/terser/html-minifier-terser#options-quick-reference).
+Minification is done by _@swc/html_ under the hood. See all available [rules](https://github.com/swc-project/bindings/blob/main/packages/html/index.ts#L5).
 
 ```js
 // Defaults
@@ -708,11 +880,7 @@ Minification is done by _html-minifier-terser_ under the hood. See all available
 {
   minification: {
     rules: {
-      collapseWhitespace: true,
-      collapseInlineTagWhitespace: true,
-      removeComments: true,
-      minifyCSS: true,
-      minifyJS: true
+      collapseWhitespace: 'all',
     }
   }
 }
@@ -743,11 +911,12 @@ Manages the default terminal logs when the build process is complete. By default
   ✔ done
 
 > Using plugin sveltekit-statiko
-  ─ robots.txt created in the "build" directory
-  ─ sitemap.xml created in the "build" directory
-  ─ manifest.json created in the "build" directory
+  ─ icons are created in the "build/favicons" directory
+  ─ site.webmanifest is created in the "build" directory
+  ─ sitemap.xml file is created in the "build" directory
+  ─ robots.txt file is created in the "build" directory
   ─ all html files from the "build" directory are minified
-  ✔ done
+  ✔ all done in 16ms
 ```
 
 To disable the option, set it to `false`.
