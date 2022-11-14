@@ -1,5 +1,5 @@
 import { readFile, writeFile, unlink } from 'node:fs/promises'
-import { createHash } from '../utils'
+import { createHash } from '../utils/index.js'
 
 let name, ext, hash, fileName
 
