@@ -1,6 +1,6 @@
 import { merge } from 'merge-kit'
 import { defaults } from './defaults.js'
-import { run } from './features'
+import { run } from './features/index.js'
 
 export function Statiko(pluginOptions) {
   let options, viteOptions

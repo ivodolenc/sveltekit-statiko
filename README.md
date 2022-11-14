@@ -43,7 +43,7 @@ export default {
 
 That's it! Start developing your app!
 
-**Statiko's** minimal setup will automatically generate `sitemap.xml`, `robots.txt` and `site.webmanifest` files with all dynamic content during the `build` process.
+**Statiko's** minimal setup will automatically generate `sitemap.xml`, `robots.txt`, `icons` and `site.webmanifest` files with all dynamic content during the `build` process.
 
 To see and test all changes, simply run the `preview` command.
 
@@ -690,7 +690,7 @@ Default settings will generate this content:
   "short_name": "your-package-name",
   "description": "your-package-description",
   "id": "/?source=pwa",
-  "start_url": "/?standalone=true",
+  "start_url": "/?source=pwa",
   "display": "standalone",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",

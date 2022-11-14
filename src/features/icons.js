@@ -1,8 +1,7 @@
 import { existsSync } from 'node:fs'
 import { mkdir, rm } from 'node:fs/promises'
-import { log } from '../utils'
 import sharp from 'sharp'
-import { createHash } from '../utils'
+import { log, createHash } from '../utils/index.js'
 
 let iconExists, rmOutDir, name, ext, hash
 
